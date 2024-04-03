@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Navbar,
@@ -8,7 +9,15 @@ import {
   Button,
 } from "@nextui-org/react";
 
-export default function App() {
+import { Session } from "next-auth";
+import { signIn, signOut } from "next-auth/react";
+import Nav from "./Nav";
+
+type Props = {
+  user: Session["user"];
+};
+
+export default function App({ user }: Props) {
   return (
     <Navbar>
       <NavbarBrand>
@@ -32,14 +41,32 @@ export default function App() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
         <NavbarItem>
           <Button as={Link} color="primary" href="#" variant="flat">
             Sign Up
           </Button>
         </NavbarItem>
+      </NavbarContent>
+      <NavbarContent>
+        {user && user.name ? (
+          <NavbarItem>
+            <button
+              onClick={() => signOut({ callbackUrl: "/", redirect: true })}
+            >
+              Sign out
+            </button>
+          </NavbarItem>
+        ) : (
+          <NavbarItem>
+            <button
+              onClick={() =>
+                signIn("github", { callbackUrl: "/nice", redirect: true })
+              }
+            >
+              Sign in
+            </button>
+          </NavbarItem>
+        )}
       </NavbarContent>
     </Navbar>
   );

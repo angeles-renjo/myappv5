@@ -17,10 +17,11 @@ export const authOptions: AuthOptions = {
     async signIn() {
       return true;
     },
-    async redirect() {
-      return "/";
-    },
   },
 };
 
-export default NextAuth(authOptions);
+const authHandler = NextAuth(authOptions);
+
+export default async function handler(...params: any[]) {
+  await authHandler(...params);
+}
