@@ -1,27 +1,42 @@
 "use client";
-import React from "react";
+import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Link,
+  NavbarMenuToggle,
   Button,
+  NavbarMenu,
+  NavbarMenuItem,
 } from "@nextui-org/react";
 
-import { Session } from "next-auth";
-import { signIn, signOut } from "next-auth/react";
-import Nav from "./Nav";
-
-type Props = {
-  user: Session["user"];
-};
-
-export default function App({ user }: Props) {
+function AuthButton() {
+  const { data: session } = useSession();
+  if (session) {
+    return (
+      <>
+        <Button color="danger" onClick={() => signOut()}>
+          Sign Out
+        </Button>
+      </>
+    );
+  }
   return (
-    <Navbar>
+    <>
+      <Button color="primary" onClick={() => signIn()}>
+        Sign In
+      </Button>
+    </>
+  );
+}
+
+export default function NavBar() {
+  return (
+    <Navbar shouldHideOnScroll>
       <NavbarBrand>
-        <p className="font-bold text-inherit">ACME</p>
+        <p className="font-bold text-inherit">Journ</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
@@ -42,31 +57,8 @@ export default function App({ user }: Props) {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
+          <AuthButton />
         </NavbarItem>
-      </NavbarContent>
-      <NavbarContent>
-        {user && user.name ? (
-          <NavbarItem>
-            <button
-              onClick={() => signOut({ callbackUrl: "/", redirect: true })}
-            >
-              Sign out
-            </button>
-          </NavbarItem>
-        ) : (
-          <NavbarItem>
-            <button
-              onClick={() =>
-                signIn("github", { callbackUrl: "/nice", redirect: true })
-              }
-            >
-              Sign in
-            </button>
-          </NavbarItem>
-        )}
       </NavbarContent>
     </Navbar>
   );

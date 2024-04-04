@@ -13,11 +13,6 @@ export const authOptions: AuthOptions = {
   ],
   debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-    async signIn() {
-      return true;
-    },
-  },
 };
 
 const authHandler = NextAuth(authOptions);
