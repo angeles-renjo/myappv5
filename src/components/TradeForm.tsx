@@ -15,7 +15,6 @@ import {
 } from "@nextui-org/react";
 
 import { useTradeContext } from "@/context/TradeContext";
-import { useSession } from "next-auth/react"; // Import useSession
 
 const TradeForm: React.FC = () => {
   const [pair, setPair] = useState("");
@@ -30,7 +29,6 @@ const TradeForm: React.FC = () => {
   const [error, setError] = useState("");
 
   const { addTrade } = useTradeContext();
-  const { data: session } = useSession(); // Use useSession to get the session data
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -39,9 +37,8 @@ const TradeForm: React.FC = () => {
       setError("");
 
       try {
-        // Create a new trade object with userId from the session
+        // Create a partial trade object based on the form input
         const newTrade = {
-          userId: session?.user?.email, // Assuming the session user object includes an id property
           pair,
           rule,
           risk,
@@ -51,30 +48,14 @@ const TradeForm: React.FC = () => {
           date,
           link,
         };
-
-        // Use the addTrade function from the context to add the new trade
         addTrade(newTrade);
-
-        // Optionally, submit the new trade to your backend
-        // ...
       } catch (error) {
         setError("Failed to submit trade. Please try again.");
       } finally {
         setIsSubmitting(false);
       }
     },
-    [
-      pair,
-      rule,
-      risk,
-      learnings,
-      tradeType,
-      profitLoss,
-      date,
-      link,
-      addTrade,
-      session,
-    ]
+    [pair, rule, risk, learnings, tradeType, profitLoss, date, link, addTrade]
   );
 
   return (

@@ -57,8 +57,8 @@ model VerificationToken {
 }
 
 model Trade {
-  id       String @id @default(cuid())
-  userId   String
+  id          String @id @default(cuid())
+  userId      String
   pair        String
   rule        String
   risk        String
