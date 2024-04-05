@@ -12,7 +12,6 @@ interface ChartData {
 export default function ProfitChart() {
   const { user, trades } = useTradeContext();
   const [chartData, setChartData] = useState<ChartData[]>([]);
-
   useEffect(() => {
     let currentAccountSize = user?.accountSize || 0;
     const formattedData = trades.map((trade) => {
@@ -27,8 +26,16 @@ export default function ProfitChart() {
         accountSize: currentAccountSize,
       };
     });
+
+    // Sort the formattedData array by date in ascending order
+    formattedData.sort((a, b) => {
+      const dateA = a.date.split("/").reverse().join("-"); // Convert to YYYY-MM-DD format for sorting
+      const dateB = b.date.split("/").reverse().join("-");
+      return new Date(dateA).getTime() - new Date(dateB).getTime();
+    });
+
     setChartData(formattedData);
-  }, [trades, user?.accountSize]); // Depend on trades and user's account size
+  }, [trades, user?.accountSize]); // Depend on trades and user's account size// Depend on trades and user's account size
 
   return (
     <div className="profit-chart sm:w-full lg:w-1/2 ">
