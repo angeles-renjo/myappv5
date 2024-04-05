@@ -1,7 +1,8 @@
+// src/components/ProfitChart.tsx
 "use client";
 import React, { useEffect, useState } from "react";
 import { AreaChart } from "@tremor/react";
-import { Trade, User } from "@prisma/client";
+import { useTradeContext } from "@/context/TradeContext"; // Adjust the import path as necessary
 
 interface ChartData {
   date: string;
@@ -9,41 +10,25 @@ interface ChartData {
 }
 
 export default function ProfitChart() {
+  const { user, trades } = useTradeContext();
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      // Fetch user and trades data here
-      // This is a placeholder URL. Replace it with your actual API endpoint.
-      const userResponse = await fetch("/api/getUserTrade");
-      const tradesResponse = await fetch("/api/getTrades");
+    let currentAccountSize = user?.accountSize || 0;
+    const formattedData = trades.map((trade) => {
+      const date = new Date(trade.date);
+      const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
+      // Ensure profitLoss is treated as a number, converting null to 0
+      const profitLossValue = trade.profitLoss !== null ? trade.profitLoss : 0;
+      currentAccountSize += profitLossValue;
 
-      if (userResponse.ok && tradesResponse.ok) {
-        const userData: User = await userResponse.json();
-        const tradesData: Trade[] = await tradesResponse.json();
-
-        let currentAccountSize = userData.accountSize || 0;
-        const formattedData = tradesData.map((trade: Trade) => {
-          const date = new Date(trade.date);
-          const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
-          // Ensure profitLoss is treated as a number, converting null to 0
-          const profitLossValue =
-            trade.profitLoss !== null ? trade.profitLoss : 0;
-          currentAccountSize += profitLossValue;
-
-          return {
-            date: formattedDate,
-            accountSize: currentAccountSize,
-          };
-        });
-        setChartData(formattedData);
-      } else {
-        console.error("Failed to fetch data");
-      }
-    };
-
-    fetchData();
-  }, []);
+      return {
+        date: formattedDate,
+        accountSize: currentAccountSize,
+      };
+    });
+    setChartData(formattedData);
+  }, [trades, user?.accountSize]); // Depend on trades and user's account size
 
   return (
     <div className="profit-chart sm:w-full lg:w-1/2 ">
