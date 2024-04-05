@@ -27,8 +27,21 @@ const TradeForm: React.FC = () => {
   const [link, setLink] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false); // New state to control popover visibility
 
   const { addTrade } = useTradeContext();
+
+  const resetForm = () => {
+    setPair("");
+    setRule("");
+    setRisk("");
+    setLearnings("");
+    setTradeType("");
+    setProfitLoss(null);
+    setDate("");
+    setLink("");
+    setError(""); // Optionally reset the error state as well
+  };
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -53,6 +66,8 @@ const TradeForm: React.FC = () => {
         setError("Failed to submit trade. Please try again.");
       } finally {
         setIsSubmitting(false);
+        setIsPopoverOpen(false);
+        resetForm();
       }
     },
     [pair, rule, risk, learnings, tradeType, profitLoss, date, link, addTrade]
@@ -60,9 +75,18 @@ const TradeForm: React.FC = () => {
 
   return (
     <div>
-      <Popover placement="bottom" backdrop="blur">
+      <Popover
+        placement="bottom"
+        backdrop="blur"
+        isOpen={isPopoverOpen} // Use isOpen prop to control the visibility
+        onClose={() => setIsPopoverOpen(false)}
+      >
         <PopoverTrigger>
-          <Button color="warning" variant="flat">
+          <Button
+            color="warning"
+            variant="flat"
+            onClick={() => setIsPopoverOpen(true)}
+          >
             Open Trade Form
           </Button>
         </PopoverTrigger>
