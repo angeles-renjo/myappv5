@@ -46,6 +46,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Trade        Trade[]
 }
 
 model VerificationToken {
@@ -56,3 +57,14 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Trade {
+  id          String   @id @default(cuid())
+  userId      String
+  symbol      String
+  quantity    Float
+  price       Float
+  total       Float
+  type        String
+  status      String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
