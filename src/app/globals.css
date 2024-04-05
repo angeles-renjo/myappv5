@@ -7,3 +7,9 @@
   margin: 0;
   padding: 0;
 }
+
+.profit-chart {
+  fill: white !important;
+  stroke: green !important;
+  color: hsl(146 79% 44% / 1) !important;
+}

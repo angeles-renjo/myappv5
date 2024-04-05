@@ -46,12 +46,12 @@ export default function ProfitChart() {
   }, []);
 
   return (
-    <div className="profit-chart sm:w-full lg:w-1/2 w-full">
+    <div className="profit-chart sm:w-full lg:w-1/2 ">
       <h1 className="text-center text-4xl tracking-widest text-white">
         PNL CHART
       </h1>
       <AreaChart
-        className="h-52 w-full"
+        className="h-52 "
         data={chartData}
         index="date"
         categories={["accountSize"]}

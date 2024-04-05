@@ -1,3 +1,4 @@
+// src/components/GoalTracker.tsx
 "use client";
 import React, { useEffect, useState } from "react";
 import { ProgressCircle } from "@tremor/react";
@@ -7,7 +8,7 @@ const GoalTracker: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/getUserAndTrades");
+      const response = await fetch("/api/getAccountSize");
       const data = await response.json();
       setData({ accountSize: data.accountSize, profitLoss: data.profitLoss });
     };

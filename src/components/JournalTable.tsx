@@ -42,7 +42,7 @@ const JournalTable: React.FC = () => {
 
   return (
     <div>
-      <Table className="py-8" aria-label="Journal table">
+      <Table className="py-8 " aria-label="Journal table">
         <TableHeader>
           {columnNames.map((name, index) => (
             <TableColumn key={index}>{name}</TableColumn>
