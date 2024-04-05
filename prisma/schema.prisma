@@ -1,11 +1,10 @@
-// "/prisma/schema.prisma"
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model Account {
@@ -14,16 +13,15 @@ model Account {
   type                     String
   provider                 String
   providerAccountId        String
-  refresh_token            String? @db.Text
-  access_token             String? @db.Text
+  refresh_token            String?
+  access_token             String?
   refresh_token_expires_in Int?
   expires_at               Int?
   token_type               String?
   scope                    String?
-  id_token                 String? @db.Text
+  id_token                 String?
   session_state            String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -46,7 +44,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Trade        Trade[]
+  Trade         Trade[]
 }
 
 model VerificationToken {
@@ -58,13 +56,15 @@ model VerificationToken {
 }
 
 model Trade {
-  id          String   @id @default(cuid())
-  userId      String
-  symbol      String
-  quantity    Float
-  price       Float
-  total       Float
-  type        String
-  status      String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id       String @id @default(cuid())
+  userId   String
+  pair        String
+  rule        String
+  risk        String
+  learnings   String?
+  tradeType   String
+  profitLoss Float?
+  date        String
+  link        String?  
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
