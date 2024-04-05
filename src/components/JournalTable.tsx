@@ -1,5 +1,6 @@
+// src/components/JournalTable.tsx
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Table,
   TableHeader,
@@ -10,7 +11,7 @@ import {
   Chip,
   Link,
 } from "@nextui-org/react";
-import { Trade } from "@prisma/client";
+import { useTradeContext } from "@/context/TradeContext"; // Adjust the import path as necessary
 
 const columnNames = [
   "Date",
@@ -24,21 +25,7 @@ const columnNames = [
 ];
 
 const JournalTable: React.FC = () => {
-  const [trades, setTrades] = useState<Trade[]>([]);
-
-  useEffect(() => {
-    const fetchTrades = async () => {
-      const response = await fetch("/api/getTrades");
-      if (response.ok) {
-        const data: Trade[] = await response.json();
-        setTrades(data);
-      } else {
-        console.error("Failed to fetch trades");
-      }
-    };
-
-    fetchTrades();
-  }, []);
+  const { trades } = useTradeContext();
 
   return (
     <div>

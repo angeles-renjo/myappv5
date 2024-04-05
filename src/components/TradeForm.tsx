@@ -14,6 +14,9 @@ import {
   PopoverTrigger,
 } from "@nextui-org/react";
 
+import { useTradeContext } from "@/context/TradeContext";
+import { useSession } from "next-auth/react"; // Import useSession
+
 const TradeForm: React.FC = () => {
   const [pair, setPair] = useState("");
   const [rule, setRule] = useState("");
@@ -26,6 +29,9 @@ const TradeForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  const { addTrade } = useTradeContext();
+  const { data: session } = useSession(); // Use useSession to get the session data
+
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -33,36 +39,42 @@ const TradeForm: React.FC = () => {
       setError("");
 
       try {
-        const response = await fetch("/api/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            pair,
-            rule,
-            risk,
-            learnings,
-            tradeType,
-            profitLoss: profitLoss !== null ? profitLoss.toString() : "",
-            date,
-            link,
-          }),
-        });
+        // Create a new trade object with userId from the session
+        const newTrade = {
+          userId: session?.user?.email, // Assuming the session user object includes an id property
+          pair,
+          rule,
+          risk,
+          learnings,
+          tradeType,
+          profitLoss: profitLoss !== null ? profitLoss : 0,
+          date,
+          link,
+        };
 
-        if (!response.ok) {
-          throw new Error("Failed to submit trade");
-        }
+        // Use the addTrade function from the context to add the new trade
+        addTrade(newTrade);
 
-        const result = await response.json();
-        console.log(result); // Handle the result as needed
+        // Optionally, submit the new trade to your backend
+        // ...
       } catch (error) {
         setError("Failed to submit trade. Please try again.");
       } finally {
         setIsSubmitting(false);
       }
     },
-    [pair, rule, risk, learnings, tradeType, profitLoss, date, link]
+    [
+      pair,
+      rule,
+      risk,
+      learnings,
+      tradeType,
+      profitLoss,
+      date,
+      link,
+      addTrade,
+      session,
+    ]
   );
 
   return (

@@ -1,22 +1,20 @@
 // src/components/GoalTracker.tsx
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ProgressCircle } from "@tremor/react";
+import { useTradeContext } from "@/context/TradeContext"; // Adjust the import path as necessary
 
 const GoalTracker: React.FC = () => {
-  const [data, setData] = useState({ accountSize: 0, profitLoss: 0 });
+  const { user, trades } = useTradeContext();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch("/api/getAccountSize");
-      const data = await response.json();
-      setData({ accountSize: data.accountSize, profitLoss: data.profitLoss });
-    };
+  // Calculate the total profit/loss from all trades
+  const totalProfitLoss = trades.reduce(
+    (acc, trade) => acc + (trade.profitLoss ?? 0),
+    0
+  );
 
-    fetchData();
-  }, []);
-
-  const total = data.accountSize + data.profitLoss;
+  // Use optional chaining and nullish coalescing to safely access user.accountSize
+  const total = (user?.accountSize ?? 0) + totalProfitLoss;
   const targetAccountSize = 1000; // Example target account size
   const progressPercentage = (total / targetAccountSize) * 100;
 
@@ -29,8 +27,8 @@ const GoalTracker: React.FC = () => {
 
       <div className="text-white flex space-x-8 items-center">
         <div>
-          <p>Account Size: {data.accountSize}</p>
-          <p>Profit/Loss: {data.profitLoss}</p>
+          <p>Account Size: {user?.accountSize ?? 0}</p>
+          <p>Total Profit/Loss: {totalProfitLoss}</p>
           <p>Total: {total}</p>
         </div>
         <div>
