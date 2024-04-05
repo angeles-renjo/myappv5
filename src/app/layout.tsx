@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 
 import SessionProvider from "@/components/SessionProvider";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { TurnOffDefaultPropsWarning } from "@/components/TurnOffDefaultPropsWarning";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
+        <TurnOffDefaultPropsWarning />
         <SessionProvider session={session}>
           <NavBar />
 
