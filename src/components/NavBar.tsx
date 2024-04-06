@@ -8,7 +8,6 @@ import {
   Button,
   Link,
 } from "@nextui-org/react";
-import { usePathname } from "next/navigation";
 
 function AuthButton() {
   const { data: session } = useSession();
