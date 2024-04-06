@@ -68,5 +68,4 @@ model Trade {
   date        String
   link        String?  
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  @@map("trades")
 }
