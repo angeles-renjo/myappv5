@@ -13,19 +13,21 @@ export default async function ProtectedRoute() {
   if (!session || !session.user) redirect("/");
 
   return (
-    <TradeProvider>
-      <main className=" w-full  flex flex-col mt-10">
-        <div className="flex items-center justify-center w-full">
-          <TradeForm />
-        </div>
-        <div className="p-10">
-          <JournalTable />
-        </div>
-        <div className="flex w-full justify-evenly items-center">
-          <ProfitChart />
-          <GoalTracker />
-        </div>
-      </main>
-    </TradeProvider>
+    <>
+      <TradeProvider>
+        <main className=" w-full  flex flex-col mt-10">
+          <div className="flex items-center justify-center w-full">
+            <TradeForm />
+          </div>
+          <div className="p-10">
+            <JournalTable />
+          </div>
+          <div className="flex w-full justify-evenly items-center">
+            <ProfitChart />
+            <GoalTracker />
+          </div>
+        </main>
+      </TradeProvider>
+    </>
   );
 }

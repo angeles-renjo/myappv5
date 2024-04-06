@@ -1,16 +1,14 @@
 "use client";
-import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
   Button,
-  NavbarMenu,
-  NavbarMenuItem,
+  Link,
 } from "@nextui-org/react";
+import { usePathname } from "next/navigation";
 
 function AuthButton() {
   const { data: session } = useSession();
@@ -40,18 +38,18 @@ export default function NavBar() {
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            Customers
+          <Link color="foreground" href="/">
+            Home
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
+          <Link href="/dashboard" color="foreground">
+            DashBoard
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="/about">
+            About Us
           </Link>
         </NavbarItem>
       </NavbarContent>
